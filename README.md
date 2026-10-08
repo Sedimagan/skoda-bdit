@@ -1,13 +1,3 @@
----
-title: Gurudev Motors BDIT Score
-emoji: 🚗
-colorFrom: blue
-colorTo: green
-sdk: gradio
-app_file: webapp/app.py
-pinned: false
----
-
 # Gurudev Motors — Best Dealer in Town
 
 Sales KPI score calculator for Škoda dealership "Gurudev Motors Pvt. Ltd."

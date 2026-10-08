@@ -3,6 +3,9 @@ name: Deploy to Hugging Face Space
 on:
   push:
     branches: [ main ]
+    paths:
+      - 'webapp/**'
+      - '.github/workflows/deploy_hf_space.yml'
   workflow_dispatch:
 
 jobs:
@@ -11,15 +14,40 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          lfs: true
+
+      - name: Prepare Space deploy directory
+        # Only webapp/ ships to the Space — the rest of this repo (desktop app,
+        # dealership Excel file, images) is unrelated to the hosted app, and
+        # Hugging Face rejects plain binary files outside Git LFS/Xet anyway.
+        run: |
+          mkdir -p space_deploy
+          cp webapp/app.py webapp/scoring.py webapp/storage.py webapp/excel_export.py webapp/requirements.txt space_deploy/
+          cp -r webapp/assets space_deploy/assets
+          cat > space_deploy/README.md << 'EOF'
+          ---
+          title: Gurudev Motors BDIT Score
+          emoji: 🚗
+          colorFrom: blue
+          colorTo: green
+          sdk: gradio
+          app_file: app.py
+          pinned: false
+          ---
+
+          Gurudev Motors — Best Dealer in Town sales KPI score calculator.
+          EOF
 
       - name: Push to Hugging Face Space
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
-          # Set this GitHub repo Variable to your Space, e.g. your-username/gurudev-bdit
+          # GitHub repo Variable set to your Space, e.g. your-username/gurudev-bdit
           HF_SPACE: ${{ vars.HF_SPACE }}
         run: |
+          cd space_deploy
+          git init -b main
+          git config user.email "actions@github.com"
+          git config user.name "GitHub Actions"
+          git add .
+          git commit -m "Deploy from GitHub ${{ github.sha }}"
           git remote add space "https://user:${HF_TOKEN}@huggingface.co/spaces/${HF_SPACE}"
           git push --force space main
