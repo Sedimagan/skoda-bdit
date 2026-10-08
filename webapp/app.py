@@ -42,11 +42,11 @@ CUSTOM_CSS = """
 }
 .app-header img { height: 48px; width: 48px; }
 .app-header .titles { display: flex; flex-direction: column; justify-content: center; }
-.app-header .main-title { font-size: 1.4rem; font-weight: 700; color: #e0e0e0; line-height: 1.2; }
+.app-header .main-title { font-size: 1.4rem; font-weight: 700; color: #f2f2f2; line-height: 1.2; }
 .app-header .sub-title { font-size: 0.9rem; font-weight: 600; color: #4caf50; line-height: 1.3; }
 
 .kpi-name { font-size: 1rem; font-weight: 600; margin-bottom: 2px; }
-.kpi-hint { font-size: 0.78rem; color: #9e9e9e; margin-bottom: 6px; }
+.kpi-hint { font-size: 0.78rem; color: #b8c2d6; margin-bottom: 6px; }
 .slab-badge {
     display: inline-block; padding: 6px 12px; border-radius: 6px;
     font-weight: 600; font-size: 0.9rem;
@@ -177,9 +177,97 @@ def _export_excel():
     return path
 
 
+# Dark palette matching the original desktop app. Every token is set for
+# BOTH its light and _dark variant to the same value, so the UI stays dark
+# regardless of the visitor's browser/OS color-scheme preference.
+_BG = "#1a1a2e"      # page background
+_PANEL = "#16213e"   # block/card background
+_INPUT = "#0d2137"   # input fields, table stripes
+_BORDER = "#2a3a5c"
+_TEXT = "#f2f2f2"    # primary text — high contrast on dark
+_DIM = "#b8c2d6"     # secondary text — still readable, not washed out
+_ACCENT = "#4caf50"
+_ACCENT_HOVER = "#5fc563"
+_RED = "#e94560"
+
 theme = gr.themes.Default(primary_hue="green", neutral_hue="slate").set(
-    body_background_fill="#1a1a2e", body_background_fill_dark="#1a1a2e",
-    block_background_fill="#16213e", block_background_fill_dark="#16213e",
+    body_background_fill=_BG, body_background_fill_dark=_BG,
+    body_text_color=_TEXT, body_text_color_dark=_TEXT,
+    body_text_color_subdued=_DIM, body_text_color_subdued_dark=_DIM,
+
+    background_fill_primary=_PANEL, background_fill_primary_dark=_PANEL,
+    background_fill_secondary=_INPUT, background_fill_secondary_dark=_INPUT,
+
+    border_color_primary=_BORDER, border_color_primary_dark=_BORDER,
+    border_color_accent=_ACCENT, border_color_accent_dark=_ACCENT,
+    border_color_accent_subdued=_ACCENT, border_color_accent_subdued_dark=_ACCENT,
+
+    link_text_color=_ACCENT, link_text_color_dark=_ACCENT,
+    link_text_color_hover=_ACCENT_HOVER, link_text_color_hover_dark=_ACCENT_HOVER,
+    link_text_color_active=_ACCENT, link_text_color_active_dark=_ACCENT,
+    link_text_color_visited=_ACCENT, link_text_color_visited_dark=_ACCENT,
+
+    code_background_fill=_INPUT, code_background_fill_dark=_INPUT,
+
+    block_background_fill=_PANEL, block_background_fill_dark=_PANEL,
+    block_border_color=_BORDER, block_border_color_dark=_BORDER,
+    block_info_text_color=_DIM, block_info_text_color_dark=_DIM,
+    block_label_background_fill=_PANEL, block_label_background_fill_dark=_PANEL,
+    block_label_border_color=_BORDER, block_label_border_color_dark=_BORDER,
+    block_label_text_color=_TEXT, block_label_text_color_dark=_TEXT,
+    block_title_background_fill=_PANEL, block_title_background_fill_dark=_PANEL,
+    block_title_border_color=_BORDER, block_title_border_color_dark=_BORDER,
+    block_title_text_color=_TEXT, block_title_text_color_dark=_TEXT,
+
+    panel_background_fill=_PANEL, panel_background_fill_dark=_PANEL,
+    panel_border_color=_BORDER, panel_border_color_dark=_BORDER,
+
+    accordion_text_color=_TEXT, accordion_text_color_dark=_TEXT,
+
+    table_text_color=_TEXT, table_text_color_dark=_TEXT,
+    table_border_color=_BORDER, table_border_color_dark=_BORDER,
+    table_even_background_fill=_PANEL, table_even_background_fill_dark=_PANEL,
+    table_odd_background_fill=_INPUT, table_odd_background_fill_dark=_INPUT,
+
+    checkbox_background_color=_INPUT, checkbox_background_color_dark=_INPUT,
+    checkbox_background_color_selected=_ACCENT, checkbox_background_color_selected_dark=_ACCENT,
+    checkbox_border_color=_BORDER, checkbox_border_color_dark=_BORDER,
+    checkbox_border_color_selected=_ACCENT, checkbox_border_color_selected_dark=_ACCENT,
+    checkbox_label_background_fill=_PANEL, checkbox_label_background_fill_dark=_PANEL,
+    checkbox_label_background_fill_selected=_ACCENT, checkbox_label_background_fill_selected_dark=_ACCENT,
+    checkbox_label_border_color=_BORDER, checkbox_label_border_color_dark=_BORDER,
+    checkbox_label_text_color=_TEXT, checkbox_label_text_color_dark=_TEXT,
+    checkbox_label_text_color_selected="#ffffff", checkbox_label_text_color_selected_dark="#ffffff",
+
+    error_background_fill="#3a1620", error_background_fill_dark="#3a1620",
+    error_border_color=_RED, error_border_color_dark=_RED,
+    error_text_color="#ff93a6", error_text_color_dark="#ff93a6",
+
+    input_background_fill=_INPUT, input_background_fill_dark=_INPUT,
+    input_background_fill_focus=_INPUT, input_background_fill_focus_dark=_INPUT,
+    input_background_fill_hover=_INPUT, input_background_fill_hover_dark=_INPUT,
+    input_border_color=_BORDER, input_border_color_dark=_BORDER,
+    input_border_color_focus=_ACCENT, input_border_color_focus_dark=_ACCENT,
+    input_border_color_hover=_ACCENT, input_border_color_hover_dark=_ACCENT,
+
+    stat_background_fill=_INPUT, stat_background_fill_dark=_INPUT,
+
+    button_primary_background_fill=_ACCENT, button_primary_background_fill_dark=_ACCENT,
+    button_primary_background_fill_hover=_ACCENT_HOVER, button_primary_background_fill_hover_dark=_ACCENT_HOVER,
+    button_primary_border_color=_ACCENT, button_primary_border_color_dark=_ACCENT,
+    button_primary_text_color="#ffffff", button_primary_text_color_dark="#ffffff",
+    button_primary_text_color_hover="#ffffff", button_primary_text_color_hover_dark="#ffffff",
+
+    button_secondary_background_fill=_INPUT, button_secondary_background_fill_dark=_INPUT,
+    button_secondary_background_fill_hover=_PANEL, button_secondary_background_fill_hover_dark=_PANEL,
+    button_secondary_border_color=_BORDER, button_secondary_border_color_dark=_BORDER,
+    button_secondary_text_color=_TEXT, button_secondary_text_color_dark=_TEXT,
+    button_secondary_text_color_hover=_TEXT, button_secondary_text_color_hover_dark=_TEXT,
+
+    button_cancel_background_fill=_RED, button_cancel_background_fill_dark=_RED,
+    button_cancel_background_fill_hover="#ff6b85", button_cancel_background_fill_hover_dark="#ff6b85",
+    button_cancel_border_color=_RED, button_cancel_border_color_dark=_RED,
+    button_cancel_text_color="#ffffff", button_cancel_text_color_dark="#ffffff",
 )
 
 with gr.Blocks(title="BDIT Sales Score") as demo:
