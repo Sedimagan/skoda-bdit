@@ -7,9 +7,22 @@ import os
 import gradio as gr
 import pandas as pd
 
+try:
+    import spaces  # Hugging Face's ZeroGPU helper — a no-op outside that runtime
+except ImportError:
+    spaces = None
+
 from scoring import KPIS, TOTAL_WT, MONTHS, QUARTERS, SLAB_COLOR, compute_slab
 from storage import load_db, save_entry
 from excel_export import build_workbook
+
+if spaces is not None:
+    @spaces.GPU
+    def _zerogpu_startup_check():
+        """This app never uses a GPU, but Spaces on ZeroGPU hardware require at
+        least one @spaces.GPU-decorated function to exist or the Space fails
+        to start. Never called."""
+        return True
 
 ASSET_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets")
 LOGO_PATH = os.path.join(ASSET_DIR, "skoda_logo.png")
